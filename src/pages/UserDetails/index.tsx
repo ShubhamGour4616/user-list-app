@@ -1,40 +1,61 @@
-import React from "react";
-import { useAppSelector } from "../../hooks/redux";
+import React, { useEffect, useState } from "react";
+import { useAppSelector, useAppDispatch } from "../../hooks/redux";
 import { ErrorMessage } from "../../components/common/ErrorMessage";
 import { LoadingSpinner } from "../../components/common/LoadingSpinner";
+import { fetchUserById } from "../../store/slices/userSlice";
+import { useParams } from "react-router-dom";
 
 const UserDetails: React.FC = () => {
-  const {
-    selectedUser: user,
-    loading,
-    error,
-  } = useAppSelector((state) => state.users);
+  const dispatch = useAppDispatch();
+  const { selectedUser, loading, error } = useAppSelector(
+    (state) => state.users
+  );
+  const [user, setUser] = useState(selectedUser);
+
+  // Get the user id from the URL params
+  const { id } = useParams<{ id: string }>();
+
+  // Fetch user data if it's not already available
+  useEffect(() => {
+    if (!selectedUser || selectedUser.id !== Number(id)) {
+      dispatch(fetchUserById(Number(id))); // Dispatch action to fetch the user by ID
+    } else {
+      setUser(selectedUser); // Use the selectedUser if already available
+    }
+  }, [id, selectedUser, dispatch]);
 
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorMessage message={error} />;
   if (!user) return <ErrorMessage message="User not found" />;
 
+  // Function to handle the back button click
+  const handleBackClick = () => {
+    window.history.back();
+  };
+
   return (
-    <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
-      <h1 className="text-4xl font-bold text-gray-800 mb-6">{user.name}</h1>
-      <div className="space-y-2 text-lg text-gray-600">
+    <div className="user-details-container">
+      {/* Back Button */}
+      <button className="back-button" onClick={handleBackClick}>
+        &larr; Back
+      </button>
+
+      <h1>{user.name}</h1>
+
+      <div>
         <p>
-          <span className="font-semibold text-gray-700">Username:</span>{" "}
-          {user.username}
+          <span className="label">Username:</span> {user.username}
         </p>
         <p>
-          <span className="font-semibold text-gray-700">Email:</span>{" "}
-          {user.email}
+          <span className="label">Email:</span> {user.email}
         </p>
         <p>
-          <span className="font-semibold text-gray-700">Phone:</span>{" "}
-          {user.phone}
+          <span className="label">Phone:</span> {user.phone}
         </p>
         <p>
-          <span className="font-semibold text-gray-700">Website:</span>{" "}
+          <span className="label">Website:</span>{" "}
           <a
             href={`http://${user.website}`}
-            className="text-blue-500 underline"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -43,33 +64,28 @@ const UserDetails: React.FC = () => {
         </p>
       </div>
 
-      <div className="mt-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Address</h2>
-        <p className="text-gray-600">
+      <div className="address-info">
+        <h2>Address</h2>
+        <p>
           {user.address.street}, {user.address.suite}, {user.address.city},{" "}
           {user.address.zipcode}
         </p>
-        <p className="text-sm text-gray-500">
+        <p className="geo-coordinates">
           Latitude: {user.address.geo.lat}, Longitude: {user.address.geo.lng}
         </p>
       </div>
 
-      <div className="mt-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Company</h2>
-        <div className="space-y-1 text-gray-600">
-          <p>
-            <span className="font-semibold text-gray-700">Name:</span>{" "}
-            {user.company.name}
-          </p>
-          <p>
-            <span className="font-semibold text-gray-700">CatchPhrase:</span>{" "}
-            {user.company.catchPhrase}
-          </p>
-          <p>
-            <span className="font-semibold text-gray-700">BS:</span>{" "}
-            {user.company.bs}
-          </p>
-        </div>
+      <div className="company-info">
+        <h2>Company</h2>
+        <p>
+          <span className="label">Name:</span> {user.company.name}
+        </p>
+        <p>
+          <span className="label">CatchPhrase:</span> {user.company.catchPhrase}
+        </p>
+        <p>
+          <span className="label">BS:</span> {user.company.bs}
+        </p>
       </div>
     </div>
   );

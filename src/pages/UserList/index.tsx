@@ -5,7 +5,7 @@ import { ErrorMessage } from "../../components/common/ErrorMessage";
 import { UserTable } from "../../components/UserTable/UserTableCell";
 import { fetchUserById, fetchUsers } from "../../store/slices/userSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { User } from "../../types/user";
+import { User } from "../../utils/types/user";
 import { Pagination } from "../../components/Pagination/Pagination";
 
 const USERS_PER_PAGE = 6;

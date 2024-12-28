@@ -1,6 +1,10 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { User } from "../../types/user";
+import { User } from "../../utils/types/user";
+
+const api = axios.create({
+  baseURL: "https://jsonplaceholder.typicode.com",
+});
 
 interface UserState {
   users: User[];
@@ -16,6 +20,7 @@ const initialState: UserState = {
   error: null,
 };
 
+// Thunk to fetch users
 export const fetchUsers = createAsyncThunk(
   "users/fetchUsers",
   async (_, { rejectWithValue }) => {
@@ -24,9 +29,7 @@ export const fetchUsers = createAsyncThunk(
 
     while (attempts < maxRetries) {
       try {
-        const response = await axios.get<User[]>(
-          "https://jsonplaceholder.typicode.com/users"
-        );
+        const response = await api.get<User[]>("/users");
         return response.data;
       } catch (error) {
         attempts++;
@@ -44,9 +47,7 @@ export const fetchUserById = createAsyncThunk(
   "users/fetchUserById",
   async (id: number, { rejectWithValue }) => {
     try {
-      const response = await axios.get<User>(
-        `https://jsonplaceholder.typicode.com/users/${id}`
-      );
+      const response = await api.get<User>(`/users/${id}`);
       return response.data;
     } catch (error) {
       return rejectWithValue("Failed to fetch user");
@@ -71,7 +72,7 @@ const userSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchUsers.fulfilled, (state, action: PayloadAction<User[]>) => {
+      .addCase(fetchUsers.fulfilled, (state, action: any) => {
         state.loading = false;
         state.users = action.payload;
       })

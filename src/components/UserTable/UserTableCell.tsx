@@ -5,9 +5,12 @@ const UserTableCell: React.FC<UserTableCellProps> = ({
   <Table.Cell className={`${width} px-4 py-2 truncate`}>{children}</Table.Cell>
 );
 
-// components/UserTable/UserTable.tsx
 import { Table } from "@radix-ui/themes";
-import { User, UserTableCellProps, UserTableProps } from "../../types/user";
+import {
+  User,
+  UserTableCellProps,
+  UserTableProps,
+} from "../../utils/types/user";
 
 export const UserTable: React.FC<UserTableProps> = ({ users, onRowClick }) => {
   const columns = [
