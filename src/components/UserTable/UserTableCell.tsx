@@ -31,10 +31,7 @@ export const UserTable: React.FC<UserTableProps> = ({ users, onRowClick }) => {
   };
 
   return (
-    <Table.Root
-      variant="surface"
-      className="w-full border-collapse shadow-sm rounded-lg overflow-hidden"
-    >
+    <Table.Root variant="surface" className="user-table">
       <Table.Header className="bg-gray-50">
         <Table.Row>
           {columns.map(({ label, width }) => (

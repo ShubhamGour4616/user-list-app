@@ -62,7 +62,7 @@ const UserList: React.FC = () => {
     return <ErrorMessage message="No users found." />;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="container">
       <UserTable users={currentItems} onRowClick={handleClick} />
       <Pagination
         currentPage={currentPage}
