@@ -1,8 +1,3 @@
-interface UserTableCellProps {
-  children: React.ReactNode;
-  width?: string;
-}
-
 const UserTableCell: React.FC<UserTableCellProps> = ({
   children,
   width = "w-auto",
@@ -12,12 +7,7 @@ const UserTableCell: React.FC<UserTableCellProps> = ({
 
 // components/UserTable/UserTable.tsx
 import { Table } from "@radix-ui/themes";
-import { User } from "../../types/user";
-
-interface UserTableProps {
-  users: User[];
-  onRowClick: (user: User) => void;
-}
+import { User, UserTableCellProps, UserTableProps } from "../../types/user";
 
 export const UserTable: React.FC<UserTableProps> = ({ users, onRowClick }) => {
   const columns = [

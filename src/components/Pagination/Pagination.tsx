@@ -1,31 +1,48 @@
-import { PaginationButton } from "./PaginationButton";
-
-interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-  canPrevPage: boolean;
-  canNextPage: boolean;
-  onPrevPage: () => void;
-  onNextPage: () => void;
-}
+import React from "react";
+import { PaginationProps } from "../../types/common";
 
 export const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
-  canPrevPage,
-  canNextPage,
-  onPrevPage,
-  onNextPage,
-}) => (
-  <div className="flex items-center gap-4 py-4">
-    <PaginationButton onClick={onPrevPage} disabled={!canPrevPage}>
-      Previous
-    </PaginationButton>
-    <span className="text-gray-700">
-      Page {currentPage} of {totalPages}
-    </span>
-    <PaginationButton onClick={onNextPage} disabled={!canNextPage}>
-      Next
-    </PaginationButton>
-  </div>
-);
+  onPageChange,
+}) => {
+  const handlePrevClick = () => {
+    if (currentPage > 1) onPageChange(currentPage - 1);
+  };
+
+  const handleNextClick = () => {
+    if (currentPage < totalPages) onPageChange(currentPage + 1);
+  };
+
+  return (
+    <div className="flex justify-between items-center mt-10">
+      <div className="flex-end">
+        <button
+          onClick={handlePrevClick}
+          disabled={currentPage === 1}
+          className={`px-4 py-2 rounded-md transition-colors ${
+            currentPage === 1
+              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+              : "bg-blue-600 text-white hover:bg-blue-700"
+          }`}
+        >
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={handleNextClick}
+          disabled={currentPage === totalPages}
+          className={`px-4 py-2 rounded-md transition-colors ${
+            currentPage === totalPages
+              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+              : "bg-blue-600 text-white hover:bg-blue-700"
+          }`}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+};

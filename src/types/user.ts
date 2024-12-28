@@ -23,3 +23,14 @@ export interface User {
     bs: string;
   };
 }
+
+export interface UserTableProps {
+  users: User[];
+  onRowClick: (user: User) => void;
+}
+
+export interface UserTableCellProps {
+  children: React.ReactNode;
+  width?: string;
+}
+

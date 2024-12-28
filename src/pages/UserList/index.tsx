@@ -6,6 +6,7 @@ import { UserTable } from "../../components/UserTable/UserTableCell";
 import { fetchUserById, fetchUsers } from "../../store/slices/userSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { User } from "../../types/user";
+import { Pagination } from "../../components/Pagination/Pagination";
 
 const USERS_PER_PAGE = 6;
 
@@ -45,12 +46,8 @@ const UserList: React.FC = () => {
     navigate(`/user/${user.id}`);
   };
 
-  const goToNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
-
-  const goToPrevPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   if (loading)
@@ -59,6 +56,7 @@ const UserList: React.FC = () => {
         <LoadingSpinner />
       </div>
     );
+
   if (error) return <ErrorMessage message={error} />;
   if (!users || users.length === 0)
     return <ErrorMessage message="No users found." />;
@@ -66,33 +64,11 @@ const UserList: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <UserTable users={currentItems} onRowClick={handleClick} />
-      <div className="flex justify-between items-center mt-6">
-        <button
-          onClick={goToPrevPage}
-          disabled={currentPage === 1}
-          className={`px-4 py-2 rounded-md transition-colors ${
-            currentPage === 1
-              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-              : "bg-blue-600 text-white hover:bg-blue-700"
-          }`}
-        >
-          Previous
-        </button>
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          onClick={goToNextPage}
-          disabled={currentPage === totalPages}
-          className={`px-4 py-2 rounded-md transition-colors ${
-            currentPage === totalPages
-              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-              : "bg-blue-600 text-white hover:bg-blue-700"
-          }`}
-        >
-          Next
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };

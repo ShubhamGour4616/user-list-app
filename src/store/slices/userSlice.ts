@@ -19,13 +19,23 @@ const initialState: UserState = {
 export const fetchUsers = createAsyncThunk(
   "users/fetchUsers",
   async (_, { rejectWithValue }) => {
-    try {
-      const response = await axios.get<User[]>(
-        "https://jsonplaceholder.typicode.com/users"
-      );
-      return response.data;
-    } catch (error) {
-      return rejectWithValue("Failed to fetch users");
+    const maxRetries = 3;
+    let attempts = 0;
+
+    while (attempts < maxRetries) {
+      try {
+        const response = await axios.get<User[]>(
+          "https://jsonplaceholder.typicode.com/users"
+        );
+        return response.data;
+      } catch (error) {
+        attempts++;
+        if (attempts >= maxRetries) {
+          return rejectWithValue(
+            `Failed to fetch users after ${maxRetries} attempts. Please try again later.`
+          );
+        }
+      }
     }
   }
 );
